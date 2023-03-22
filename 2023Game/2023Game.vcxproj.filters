@@ -42,5 +42,8 @@
     <ClCompile Include="숫자 퍼즐 게임.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="빙고게임.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
