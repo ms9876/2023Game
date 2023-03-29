@@ -7,7 +7,11 @@ enum class AI_MODE
 	AM_EASY = 1,
 	AM_NORMAL
 };
-
+enum class LINE_NUMBER {
+	LN_H1, LN_H2, LN_H3, LN_H4, LN_H5,
+	LN_V1, LN_V2, LN_V3, LN_V4, LN_V5,
+	LN_LT, LN_RT
+};
 void Init(int* _pNumber)
 {
 	// 셔플
@@ -133,47 +137,165 @@ int SelectAinumber(int* _pNumber, AI_MODE _eMode)
 		return iNoneSelect[rand() % iNoneSelectcnt];
 	}
 	break;
-	case AI_MODE::AM_NORMAL: // 모르겠어요 ㅠㅠㅠㅠ 리턴하는 부분에 뭘 해줘야 할지 모르겠어요
+	case AI_MODE::AM_NORMAL:
 	{
-		int aiHorStar = 0, aiVerStar = 0, aiLTStar = 0, aiRTStar = 0;
+#pragma region 선생님 코드
+		int iLine = 0;
+		int iStarcnt = 0;
+		int iSavecnt = 0;
 
-		for (int i = 0; i < 5; i++)
-		{
-			aiHorStar = aiVerStar = 0;
+		// 가로줄
+		for (int i = 0; i < 5; i++) {
+			iStarcnt = 0;
 			for (int j = 0; j < 5; j++)
 			{
-				if (_pNumber[i * 5 + j] == INT_MAX)
-					aiHorStar++;
-				if (_pNumber[j * 5 + i] == INT_MAX)
-					aiVerStar++;
+				if (_pNumber[i * 5 + j] = INT_MAX) {
+					iStarcnt++;
+				}
+			}
+			if (iStarcnt < 5 && iSavecnt < iStarcnt) { // 제일 많은 줄로 빙고 줄 바꾸기
+				iLine = 1;
+				iSavecnt = iStarcnt;
 			}
 		}
+		// 세로줄
+		for (int i = 0; i < 5; i++) {
+			iStarcnt = 0;
+			for (int j = 0; j < 5; j++)
+			{
+				if (_pNumber[j * 5 + i] = INT_MAX) {
+					iStarcnt++;
+				}
+			}
+			if (iStarcnt < 5 && iSavecnt < iStarcnt) { // 제일 많은 줄로 빙고 줄 바꾸기
+				iLine = i + 5;
+				iSavecnt = iStarcnt;
+			}
+		}
+		// LT 대각선
+		iStarcnt = 0;
+		for (int i = 0; i < 25; i+=6)
+		{
+			if (_pNumber[i] = INT_MAX) {
+				iStarcnt++;
+			}
+		}
+		if (iStarcnt < 5 && iSavecnt < iStarcnt) { // 제일 많은 줄로 빙고 줄 바꾸기
+			iLine = (int)LINE_NUMBER::LN_LT;
+			iSavecnt = iStarcnt;
+		}
+		// RT 대각선
+		iStarcnt = 0;
+		for (int i = 4; i < 20; i += 44)
+		{
+			if (_pNumber[i] = INT_MAX) {
+				iStarcnt++;
+			}
+		}
+		if (iStarcnt < 5 && iSavecnt < iStarcnt) { // 제일 많은 줄로 빙고 줄 바꾸기
+			iLine = (int)LINE_NUMBER::LN_LT;
+			iSavecnt = iStarcnt;
+		}
+		// 줄을 알게 되엇당! 야호오
+		if (iLine <= (int)LINE_NUMBER::LN_H5) { // 가로
+			for (int i = 0; i < 5; i++)
+			{
+				if (_pNumber[iLine * 5 + i] != INT_MAX)
+					return _pNumber[iLine * 5 + i];
+			}
+		}
+		else if (iLine <= (int)LINE_NUMBER::LN_V5) { // 세로
+			for (int i = 0; i < 5; i++)
+			{
+				if (_pNumber[i * 5 + (iLine - 5)] != INT_MAX)
+					return _pNumber[i * 5 + (iLine - 5)];
+			}
+		}
+		else if (iLine <= (int)LINE_NUMBER::LN_V5) { // LT 대각선
+			for (int i = 0; i < 25; i+=6)
+			{
+				if (_pNumber[i] != INT_MAX)
+					return _pNumber[i];
+			}
+		}
+		else if (iLine <= (int)LINE_NUMBER::LN_V5) { // RT 대각선
+			for (int i = 4; i < 20; i += 4)
+			{
+				if (_pNumber[i] != INT_MAX)
+					return _pNumber[i];
+			}
+		}
+		return -1;
+#pragma endregion
 
-		// 대각선
-		for (int i = 0; i < 25; i += 6)
-		{
-			if (_pNumber[i] == INT_MAX)
-				aiLTStar++;
-		}
-		if (aiLTStar == 5)
-		for (int i = 4; i <= 20; i += 4)
-		{
-			if (_pNumber[i] == INT_MAX)
-				aiRTStar++;
-		}
-		// 모르겠어서 하드 코딩 했어욤..ㅎㅎ
-		if (aiHorStar > aiVerStar && aiHorStar > aiLTStar && aiHorStar > aiRTStar) {
-			return;
-		}
-		if (aiVerStar > aiHorStar && aiVerStar > aiLTStar && aiVerStar > aiRTStar) {
-			return;
-		}
-		if (aiLTStar > aiHorStar && aiLTStar > aiVerStar && aiLTStar > aiRTStar) {
-			return;
-		}
-		if (aiRTStar > aiHorStar && aiRTStar > aiLTStar && aiRTStar > aiVerStar) {
-			return;
-		}
+
+#pragma region 내 생각
+		//int aihorstar = 0, aiverstar = 0, ailtstar = 0, airtstar = 0;
+
+		//for (int i = 0; i < 5; i++)
+		//{
+		//	aihorstar = aiverstar = 0;
+		//	for (int j = 0; j < 5; j++)
+		//	{
+		//		if (_pnumber[i * 5 + j] == int_max)
+		//			aihorstar++;
+		//		if (_pnumber[j * 5 + i] == int_max)
+		//			aiverstar++;
+		//	}
+		//}
+
+		//// 대각선
+		//for (int i = 0; i < 25; i += 6)
+		//{
+		//	if (_pnumber[i] == int_max)
+		//		ailtstar++;
+		//}
+		//if (ailtstar == 5)
+		//	for (int i = 4; i <= 20; i += 4)
+		//	{
+		//		if (_pnumber[i] == int_max)
+		//			airtstar++;
+		//	}
+		//// 모르겠어서 하드 코딩 했어욤..ㅎㅎ
+		//if (aihorstar > aiverstar && aihorstar > ailtstar && aihorstar > airtstar) {
+		//	for (int i = 0; i < 5; i++)
+		//	{
+		//		for (int j = 0; j < 5; j++)
+		//		{
+		//			if (_pnumber[i * 5 + j] == int_max)
+		//				inoneselect[inoneselectcnt] = _pnumber[i];
+		//		}
+		//	}
+		//	return inoneselect[rand() % inoneselectcnt];
+		//}
+		//if (aiverstar > aihorstar && aiverstar > ailtstar && aiverstar > airtstar) {
+		//	for (int i = 0; i < 5; i++)
+		//	{
+		//		for (int j = 0; j < 5; j++)
+		//		{
+		//			if (_pnumber[j * 5 + i] == int_max)
+		//				inoneselect[inoneselectcnt] = _pnumber[i];
+		//		}
+		//	}
+		//	return inoneselect[rand() % inoneselectcnt];
+		//}
+		//if (ailtstar > aihorstar && ailtstar > aiverstar && ailtstar > airtstar) {
+		//	for (int i = 0; i < 25; i += 6)
+		//	{
+		//		if (_pnumber[i] == int_max)
+		//			inoneselect[inoneselectcnt] = _pnumber[i];
+		//	}
+		//	return inoneselect[rand() % inoneselectcnt];
+		//}
+		//if (airtstar > aihorstar && airtstar > ailtstar && airtstar > aiverstar) {
+		//	for (int i = 4; i <= 20; i += 4)
+		//	{
+		//		if (_pnumber[i] == int_max)
+		//			inoneselect[inoneselectcnt] = _pnumber[i];
+		//	}
+		//	return inoneselect[rand() % inoneselectcnt];
+		//}
+#pragma endregion
 	}
 	break;
 	default:
