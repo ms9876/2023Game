@@ -48,5 +48,8 @@
     <ClCompile Include="빙고게임 AI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="절대음감 게임.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
